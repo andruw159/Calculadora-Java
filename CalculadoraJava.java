@@ -2,46 +2,55 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package com.mycompany.calculadorajava;
+package com.andruw.calculadorajava;
 import java.util.Scanner;
-
 /**
- *
- * @author juanh
+ * 1. Entrar los datos int o string
+ * 2. Determinar que sistema se desea utilizar.
+ * 3. Operar los datos
+ *  3.1 Determinar cuantas notas
+ *  3.2 Llamar al metodo entrar datos tantas veces como se quiera
+ *  3.3 Entrar porcentajes por cada nota
+ *  3.4 Multiplicar la nota por su porcentaje
+ *  3.5 Sumar el prodcuto de cada nota.
+ * 4. Mostrar el resultado de la suma.
+ * 5.Determinar si el estudiante aprobó o reporbró.
+ * @author andre
  */
 public class CalculadoraJava {
     
     public static Scanner teclado = new Scanner (System.in);
     public static String materia = "";
     public static float notaFinal = 0;
+    public static boolean verify = false;
     
-    public static int opciones(){
+    public static int opciones(){ // Lee las 
         int opcion;
         opcion = teclado.nextInt();
         return opcion;
         
     }
-    public static int leerNumero(String mensaje){
+    public static int leerNumero(String mensaje){ //Lee números enteros
        int dato;
        System.out.println(mensaje);
        dato = teclado.nextInt();
        return dato;
     }
     
-    public static float leerFloat(String mensaje){
+    public static float leerFloat(String mensaje){ //Lee números flotantes
         float dato;
         System.out.println(mensaje);
         dato = teclado.nextFloat();
         return dato;
     }
     
-    public static String leerLinea(String mensaje){
+    public static String leerLinea(String mensaje){ //Lee Strings de linea
         String dato; 
         System.out.println(mensaje);
         dato = teclado.nextLine();
         return dato;
     }
-    public static String leer(String mensaje){
+    public static String leer(String mensaje){ //Lee Strings cortos
         String dato; 
         System.out.println(mensaje);
         dato = teclado.next();
@@ -104,16 +113,24 @@ public class CalculadoraJava {
         }
          return letra;
     }
+    public static boolean letraValida(String letra) {
+        return letra.matches("[a-f]");                     // Verifica que la letra esté entre 'a' y 'f'
+    }
     
-
-    public static void calculoNotaParcial() {
+    public static void calculoNotaParcial() { //Calcula la nota final, verifica el sitema que se desee usar (Numerico o Alfanumerico) 
         System.out.println("Bienvenido a tu calculador de promedio");
         materia=leerLinea("Ingrese el nombre de la materia: ");
-        
+        while (verify == false){
         System.out.println("Que Sistema utilizas?");
         System.out.println("1. Numerico");
         System.out.println("2. Alfanumerico");
         int respuesta = opciones();
+        if (respuesta != 1 || respuesta != 2){
+            verify = false;            
+        }else{
+            verify = true;
+        }
+       
         switch (respuesta) {
             case 1 -> {
                 int cantNotas = leerNumero("Ingrese la cantidad de notas a procesar");
@@ -129,14 +146,15 @@ public class CalculadoraJava {
                 }else{
                     imprimir ("Reprobaste la materia "+materia);
                 }
+                verify = true;
             }
             case 2 -> {
                 int cantNotas = leerNumero("Ingrese la cantidad de notas a procesar");
                 float suma=0;
                 for(int i=1; i<=cantNotas;i++){
-                    String letra =leer("Ingrese la nota en letra mayuscula: ");       //Captura la letra proporcionada por el usuario
-                    if (letra.length() != 1 || !Character.isLetter(letra.charAt(0))) {   //Verifica la información proporcionada por el usuario y reinicia el contador de ser necesario
-                       System.out.println("Error. Por favor ingrese una sola letra.");
+                    String letra =leer("Ingrese la nota "+i+" en letra mayuscula: ");       //Captura la letra proporcionada por el usuario.
+                    if (letra.length() != 1 || !Character.isLetter(letra.charAt(0))||letraValida(letra) == false) {   //Verifica la información proporcionada por el usuario y reinicia el contador de ser necesario.
+                       System.out.println("Error. Por favor ingrese una letra valida.");
                        i=0;
                        } else {
                         char letra1 = letra.toUpperCase().charAt(0);      //Convierte la letra en mayuscula en caso de necesitarlo
@@ -147,23 +165,24 @@ public class CalculadoraJava {
                 } notaFinal =suma;
                 int notaInt=(int) Math.floor(notaFinal);                    //Convierte la nota final si esta en decimal a entera
                 String notaLetra = convertNumeroALetra(notaInt);            //Convierte el numero obtenido a letra
-                imprimir("Su nota final en la materia "+materia+" es"+notaLetra);
+                imprimir("Su nota final en la materia "+materia+" es "+notaLetra);
                 if (notaFinal>=3){
-                    imprimir("Aprobaste la materia "+materia);
+                    imprimir("Aprobaste la materia "+materia+".");
                 }else{
-                    imprimir ("Reprobaste la materia "+materia);
-                }
-                
+                    imprimir ("Reprobaste la materia "+materia+".");
+                } 
+                verify = true;
             }
-              
+
             default -> System.out.println("Opcion no valida ");
-        }
-     }
+
+        } 
+        } 
+     
     
-    
+    }
+
     public static void main(String[] args) {
         calculoNotaParcial();
     }
-
-    
 }
